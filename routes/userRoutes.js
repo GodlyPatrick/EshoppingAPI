@@ -19,7 +19,6 @@ import upload from "../middleware/uploadmiddleware.js";
 
 userRouter
   .post("/register", registerUser)
-  // .get("/user/:id", getUserById)
   .get("/queryUser", authenticate, getAUser)
   .get("/Myprofile", authenticate, getMyProfile)
   .post("/requestSeller", authenticate, checkBanStatus, blockIncompleteProfiles, requestSeller)

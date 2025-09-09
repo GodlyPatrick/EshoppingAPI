@@ -18,9 +18,21 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+// CASE 2: VIEW A USER BY ID
+export const getUserById =async (req, res) => {
+  const { userid } = req.params;
+  try {
+    const user = await User.findById(userid).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found! ⚠" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
 
-
-// CASE : BAN/UNBAN A USER
+// CASE 3: BAN/UNBAN A USER
 export const updateBanStatus = async (req, res) => {
   const { userid } = req.params;
   const { username, email, action } = req.body; // action can be either ban or unban
@@ -71,7 +83,7 @@ export const updateBanStatus = async (req, res) => {
   }
 };
 
-// CASE 2: UPGRADE A USER TO SELLER
+// CASE 4: UPGRADE A USER TO SELLER
 export const handleSellerRequest = async (req, res) => {
   const { userid } = req.params;
   const { action } = req.body; // action can be either "approve" or "reject"
@@ -113,7 +125,7 @@ export const handleSellerRequest = async (req, res) => {
   }
 };
 
-// CASE 3: PROMOTE/DEMOTE A USER
+// CASE 5: PROMOTE/DEMOTE A USER
 
 export const updateUserRole = async (req, res) => {
   const userid = req.params.id;
@@ -193,7 +205,7 @@ export const updateUserRole = async (req, res) => {
   }
 };
 
-// CASE 3: DELETE A USER AND ALL THEIR ASSOCIATED DATA (PRODUCTS, CART, ORDERS)
+// CASE 6: DELETE A USER AND ALL THEIR ASSOCIATED DATA (PRODUCTS, CART, ORDERS)
 export const deleteUserAndData = async (req, res) => {
   const { userid } = req.params;
     try {
@@ -215,7 +227,7 @@ export const deleteUserAndData = async (req, res) => {
     // Finally, delete the user account
     await User.findByIdAndDelete(userid);
     res.status(200).json({
-      message: `User ${targetUser.username} and all their associated data have been deleted successfully ✅`,
+      message: `User ${targetUser.username} and all associated data have been deleted successfully ✅`,
     });
   } catch (error) {
     return res.status(500).json({

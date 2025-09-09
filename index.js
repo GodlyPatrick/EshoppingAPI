@@ -8,6 +8,7 @@ import productRouter from "./routes/productRoutes.js";
 import cartRouter from "./routes/cartRoutes.js";
 import orderRouter from "./routes/orderRoutes.js";
 import roleRouter from "./routes/roleRoutes.js";
+import paymentRouter from "./routes/PaymentRoutes.js";
 
 import connectDB from "./dbConnect/mongoDbConfig.js";
 
@@ -42,6 +43,8 @@ app.use("/api/", productRouter);
 app.use("/api/", cartRouter);
 app.use("/api/", orderRouter);
 app.use("/api/", roleRouter);
+app.use("/api/", paymentRouter);
+
 
 // Start the server
 app.listen(PORT, () => {

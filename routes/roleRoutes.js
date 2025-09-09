@@ -38,6 +38,7 @@ roleRouter
 
 import { 
   getAllUsers,
+  getUserById,
   updateBanStatus, 
   updateUserRole,
   handleSellerRequest,
@@ -54,6 +55,7 @@ import {
 //ADMIN ROUTES
 roleRouter
 .get("/admin/getAllUsers", authenticate, checkBanStatus, isAdmin, getAllUsers)
+.get("/admin/getUserById/:userid", authenticate, checkBanStatus, isAdmin, getUserById )
 .get("/admin/getAllOrders", authenticate, checkBanStatus, isAdmin, getAllOrders)
 .get("/admin/getOrderById/:orderid", authenticate, checkBanStatus, isAdmin, getOrderById )
 .put("/admin/updateOrder/:orderid", authenticate, checkBanStatus, isAdmin, updateOrderStatus)
@@ -63,7 +65,7 @@ roleRouter
 .put("/admin/updateBanStat/:userid", authenticate, checkBanStatus, isAdmin, updateBanStatus)
 
 
-//SUPERADMIN ROUTES
+//SUPERADMIN-ONLY ROUTES
  .put("/superAdmin/updateUserRole/:userid", authenticate, isSuperAdmin, updateUserRole)
  .delete("/superAdmin/deleteUser/:userid", authenticate, isSuperAdmin, deleteUserAndData)
  .put("/superAdmin/handleSellerReq/:userid", authenticate, isSuperAdmin, handleSellerRequest);
