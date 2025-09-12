@@ -13,21 +13,26 @@ export const createCheckoutSession = async (req, res) => {
     const line_items = order.items.map(item => ({
       price_data: {
         currency: "NGN",
-        product_data: { name: `Product ${item.productId}` },
+        product_data: { name: `Product ${item.name}` },
         unit_amount: Math.round(item.price * 100), // Stripe uses cents
       },
       quantity: item.quantity,
     }));
-    const YOUR_DOMAIN = process.env.CLIENT_URL || 'http://localhost:5000';
+    const YOUR_DOMAIN = process.env.CLIENT_URL || "http://localhost:5000";
+    console.log("using Domain:", YOUR_DOMAIN)
+     console.log("success_url",`${YOUR_DOMAIN}/api/payment/success?session_id={CHECKOUT_SESSION_ID}`);
+    console.log("cancel_url:", `${YOUR_DOMAIN}/api/payment/cancel`,)
+
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${YOUR_DOMAIN}/cancel`,
+      success_url: `${YOUR_DOMAIN}/api/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${YOUR_DOMAIN}/api/payment/cancel`,
       metadata: { orderId: order._id.toString(), userId: req.user._id.toString() },
     });
-
+   
     res.status(200).json({ url: session.url });
   } catch (error) {
     res.status(500).json({ message: "Stripe session creation failed", error: error.message });
@@ -42,7 +47,7 @@ export const stripeWebhook = async (req, res) => {
   let event;  
 
   try {  
-    event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);  
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);  
     console.log("✅ Stripe Event Received:", event.type);  
   } catch (err) {  
     console.error("❌ Webhook signature verification failed:", err.message);  

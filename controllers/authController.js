@@ -33,7 +33,7 @@ export const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "30m" },
     );
-
+    // send token in HTTP-only cookie
     return res
       .cookie("token", token, { httpOnly: true, sameSite: "strict" })
       .status(200)
